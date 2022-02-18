@@ -1,0 +1,15 @@
+[submodule "arp"]
+	path = arp
+	url = https://github.com/TheLortex/arp
+[submodule "ethernet"]
+	path = ethernet
+	url = https://github.com/TheLortex/ethernet
+[submodule "mirage-net"]
+	path = mirage-net
+	url = https://github.com/TheLortex/mirage-net
+[submodule "mirage-net-unix"]
+	path = mirage-net-unix
+	url = https://github.com/TheLortex/mirage-net-unix
+[submodule "mirage-tcpip"]
+	path = mirage-tcpip
+	url = https://github.com/TheLortex/mirage-tcpip
