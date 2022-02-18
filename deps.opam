@@ -1,0 +1,22 @@
+opam-version: "2.0"
+maintainer:   "Lortex"
+homepage:     "https://github.com/TheLortex/networking-experiments"
+authors: [ "Lortex"]
+license: "ISC"
+tags: ["org:mirage"]
+
+build: [
+]
+depends: [
+  "dune"
+  "ocaml" {>= "4.08.0"}
+  "uring"
+  "tcpip"
+  "eio"
+  "eio_linux"
+]
+pin-depends: [
+  ["eio.dev" "git+https://github.com/ocaml-multicore/eio.git"]
+  ["eio_linux.dev" "git+https://github.com/ocaml-multicore/eio.git"]
+]
+synopsis: "Networking experiments"

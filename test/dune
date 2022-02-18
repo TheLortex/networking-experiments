@@ -1,0 +1,12 @@
+(executables
+ (names throughput throughput2)
+ (libraries
+  ctf.unix
+  logs.fmt
+  mirage-net-unix
+  ethernet
+  arp.mirage
+  tcpip.ipv4
+  tcpip.icmpv4
+  mirage-random-stdlib
+  mirage-clock-unix))
