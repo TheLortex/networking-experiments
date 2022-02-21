@@ -1,7 +1,6 @@
 (executables
- (names throughput throughput2)
+ (names ping_responder)
  (libraries
-  ctf.unix
   logs.fmt
   mirage-net-unix
   ethernet

@@ -19,7 +19,6 @@ module Ip = Static_ipv4.Make (Mirage_random_stdlib) (Mclock) (Eth) (Arp)
 module Icmp = Icmpv4.Make (Ip)
 
 let run test =
-  Ctf_unix.with_tracing "trace.ctf" @@ fun () ->
   Eio_linux.run @@ fun env ->
   Eio.Std.Switch.run @@ fun sw -> test ~sw ~env ()
 
