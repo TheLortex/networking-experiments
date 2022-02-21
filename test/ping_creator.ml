@@ -36,11 +36,11 @@ let echo_reply icmp ~proto ~src ~dst buffer =
   | _ -> ignore (src, dst, buffer, proto)
 
 let test_write ~sw ~env () =
-  let net = Netif.connect ~sw "tap0" in
+  let net = Netif.connect ~sw "tap1" in
   let t = Eth.connect net in
   let arp = Arp.connect ~sw t (Eio.Stdenv.clock env) in
   let ip =
-    Ip.connect ~cidr:(Ipaddr.V4.Prefix.of_string_exn "10.0.0.10/24") t arp
+    Ip.connect ~cidr:(Ipaddr.V4.Prefix.of_string_exn "10.0.0.11/24") t arp
   in
   let icmp = Icmp.connect ip in
   Eio.Std.Fibre.fork ~sw (fun () ->
@@ -50,11 +50,11 @@ let test_write ~sw ~env () =
              (Ip.input ~tcp:ip_ignore ~udp:ip_ignore ~default:(echo_reply icmp)
                 ip)
            ~ipv6:ignore t)
-      |> unwrap_result)(*;
-  for i = 0 to 20 do
+      |> unwrap_result);
+  for i = 0 to 128 do
     Icmp.write icmp
-      ~src:(Ipaddr.V4.of_string_exn "10.0.0.2")
-      ~dst:(Ipaddr.V4.of_string_exn "10.0.0.1")
+      ~src:(Ipaddr.V4.of_string_exn "10.0.0.11")
+      ~dst:(Ipaddr.V4.of_string_exn "10.0.0.10")
       ~ttl:64
       (Icmpv4_packet.Marshal.make_cstruct
          {
@@ -64,11 +64,11 @@ let test_write ~sw ~env () =
          }
          ~payload:Cstruct.empty)
     |> unwrap_result;
-    Eio.Time.sleep (Eio.Stdenv.clock env) 1.
-  done*)
+    Eio.Time.sleep (Eio.Stdenv.clock env) 0.1
+  done
 
 let () =
-  Logs.set_level (Some Info);
+  Logs.set_level (Some Debug);
   Logs.set_reporter (Logs_fmt.reporter ())
 
 let _ = run test_write

@@ -1,6 +1,7 @@
 (executables
- (names ping_responder)
+ (names ping_responder ping_creator)
  (libraries
+  eio_luv
   logs.fmt
   mirage-net-unix
   ethernet
