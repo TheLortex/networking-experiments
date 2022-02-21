@@ -26,8 +26,6 @@ let unwrap_result = function
   | Ok v -> v
   | Error trace -> Fmt.pr "%a" Error.pp_trace trace
 
-let sz = 1_000_000_000
-let n = 8
 let ip_ignore ~src ~dst buffer = ignore (src, dst, buffer)
 
 let echo_reply icmp ~proto ~src ~dst buffer =
