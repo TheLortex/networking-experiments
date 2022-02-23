@@ -19,6 +19,7 @@ module Ip = Static_ipv4.Make (Mirage_random_stdlib) (Mclock) (Eth) (Arp)
 module Icmp = Icmpv4.Make (Ip)
 
 let run test =
+  Eio_unix.Ctf.with_tracing "trace.ctf" @@ fun () ->
   Eio_linux.run @@ fun env ->
   Eio.Std.Switch.run @@ fun sw -> test ~sw ~env ()
 
@@ -30,9 +31,7 @@ let ip_ignore ~src ~dst buffer = ignore (src, dst, buffer)
 
 let echo_reply icmp ~proto ~src ~dst buffer =
   match proto with
-  | 1 ->
-      Printf.printf "Input.\n%!";
-      Icmp.input icmp ~src ~dst buffer
+  | 1 -> Icmp.input icmp ~src ~dst buffer
   | _ -> ignore (src, dst, buffer, proto)
 
 let test_write ~sw ~env () =
@@ -50,7 +49,8 @@ let test_write ~sw ~env () =
              (Ip.input ~tcp:ip_ignore ~udp:ip_ignore ~default:(echo_reply icmp)
                 ip)
            ~ipv6:ignore t)
-      |> unwrap_result)(*;
+      |> unwrap_result)
+(*;
   for i = 0 to 20 do
     Icmp.write icmp
       ~src:(Ipaddr.V4.of_string_exn "10.0.0.2")

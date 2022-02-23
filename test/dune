@@ -1,5 +1,5 @@
 (executables
- (names ping_responder ping_creator)
+ (names ping_responder ping_creator iperf iperf_server)
  (libraries
   eio_luv
   logs.fmt
