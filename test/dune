@@ -1,5 +1,5 @@
 (executables
- (names ping_responder ping_creator iperf iperf_server)
+ (names ping_responder ping_creator iperf iperf_server http)
  (libraries
   eio_luv
   logs.fmt
@@ -9,4 +9,7 @@
   tcpip.ipv4
   tcpip.icmpv4
   mirage-random-stdlib
-  mirage-clock-unix))
+  mirage-clock-unix
+  mirage-time-unix
+  utcp.eio
+  httpaf-eio))
