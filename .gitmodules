@@ -16,3 +16,6 @@
 [submodule "error"]
 	path = error
 	url = https://github.com/TheLortex/error
+[submodule "utcp"]
+	path = utcp
+	url = https://github.com/roburio/utcp
