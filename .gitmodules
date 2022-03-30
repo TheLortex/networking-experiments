@@ -19,3 +19,9 @@
 [submodule "utcp"]
 	path = utcp
 	url = https://github.com/roburio/utcp
+[submodule "vendor/eio"]
+	path = vendor/eio
+	url = https://github.com/TheLortex/eio.git
+[submodule "vendor/ocaml-uring"]
+	path = vendor/ocaml-uring
+	url = https://github.com/TheLortex/ocaml-uring.git
