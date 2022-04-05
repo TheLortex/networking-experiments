@@ -18,7 +18,7 @@
 	url = https://github.com/TheLortex/error
 [submodule "utcp"]
 	path = utcp
-	url = https://github.com/roburio/utcp
+	url = https://github.com/TheLortex/utcp
 [submodule "vendor/eio"]
 	path = vendor/eio
 	url = https://github.com/TheLortex/eio.git
