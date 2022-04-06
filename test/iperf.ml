@@ -12,7 +12,7 @@ let ip_ignore ~src ~dst buffer = ignore (src, dst, buffer)
 let n_domains = 1
 let n_sent = 16
 let n_threads = 8
-let cut = 1024
+let cut = 4096
 let size = 1350
 let len = n_domains * n_sent * n_threads * cut * size
 let () = Printf.printf "Packet size: %d (%d)\n" len (n_domains * n_sent * n_threads * cut)
@@ -36,7 +36,7 @@ let test ~sw ~env () =
   in
   let icmp = Icmp.connect ip in
   let udp = Udp.connect ip in
-  Eio.Std.Fibre.fork ~sw (fun () ->
+  Eio.Std.Fiber.fork ~sw (fun () ->
       Netif.listen net ~header_size:Ethernet.Packet.sizeof_ethernet
         (Eth.input ~arpv4:(Arp.input arp)
            ~ipv4:
@@ -57,7 +57,7 @@ let test ~sw ~env () =
             done;
             Printf.printf ".%!"
           done)
-      |> Eio.Std.Fibre.all)
+      |> Eio.Std.Fiber.all)
   |> List.iter Fun.id;
   exit 0
 (*
@@ -66,6 +66,6 @@ let () =
   Logs.set_reporter (Logs_fmt.reporter ())
 *)
 let () =
-  Eio_unix.Ctf.with_tracing "trace.ctf" @@ fun () ->
+  (*Eio_unix.Ctf.with_tracing "trace.ctf" @@ fun () ->*)
   Eio_linux.run @@ fun env ->
   Eio.Std.Switch.run @@ fun sw -> test ~sw ~env ()

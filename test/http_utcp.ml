@@ -16,51 +16,13 @@ let unwrap_result = function
   | Ok v -> v
   | Error trace -> Fmt.pr "%a" Error.pp_trace trace
 
-type _ Eio.Generic.ty += Flow : Tcp.flow Eio.Generic.ty
-
-let chunk_cs = Cstruct.create 10000 
-
-class flow_obj (flow : Tcp.flow) =
-  object (_ : < Eio.Flow.source ; Eio.Flow.sink ; .. >)
-    (*
-    method close = Tcp.close flow
-  *)
-    method probe : type a. a Eio.Generic.ty -> a option =
-      function Flow -> Some flow | _ -> None
-
-    method copy (src : #Eio.Flow.source) =
-      try
-        while true do
-          let got = Eio.Flow.read src chunk_cs in
-          match Tcp.write flow (Cstruct.sub chunk_cs 0 got) with
-          | Ok () -> ()
-          | Error _e -> ()
-        done
-      with End_of_file -> ()
-
-    method read_into buf =
-      match Tcp.read flow with
-      | Ok (`Data buffer) ->
-          Cstruct.blit buffer 0 buf 0 (Cstruct.length buffer);
-          let len = Cstruct.length buffer in
-          len
-      | Ok `Eof -> raise End_of_file
-      | Error _ -> raise End_of_file
-
-    method read_methods = []
-
-    method shutdown (_ : [ `All | `Receive | `Send ]) =
-      Printf.printf "SHUTDOWN.\n%!";
-      Tcp.close flow
-  end
-
-let handler ~sw (flow : Tcp.flow) =
+let handler ~sw (flow : < Eio.Flow.two_way ; Eio.Flow.close >) =
   Eio.Private.Ctf.note_increase "http_handler" 1;
-  let (eio_flow : #Eio.Flow.two_way) = new flow_obj flow in
-  Wrk_bench.handle_connection ~sw eio_flow
+  Wrk_bench.handle_connection ~sw
+    (flow :> Eio.Flow.two_way)
     (`Tcp (Eio.Net.Ipaddr.V4.loopback, 8080));
   Eio.Private.Ctf.note_increase "http_handler" (-1);
-  Tcp.close flow
+  Eio.Flow.close flow
 
 let test ~sw ~env () =
   let clock = Eio.Stdenv.clock env in
@@ -85,11 +47,12 @@ let test ~sw ~env () =
 
 
 let () =
-  Logs.set_level (Some Warning);
+  Logs.set_level (Some Info);
   Logs.set_reporter (Logs_fmt.reporter ())
 
-let () =(*
-  Eio_unix.Ctf.with_tracing "trace.ctf" @@ fun () ->
-  *)Printf.printf "Ready.\n%!";
-  Eio_linux.run ~queue_depth:128 @@ fun env ->
-  Eio.Std.Switch.run @@ fun sw -> test ~sw ~env ()
+let () =
+  Eio_unix.Ctf.with_tracing ~size:1_500_000 "trace.ctf" @@ fun () ->
+  Printf.printf "Ready.\n%!";
+  ( Eio_linux.run ~queue_depth:128 @@ fun env ->
+    Eio.Std.Switch.run @@ fun sw -> test ~sw ~env () );
+  Printf.printf "The end.\n%!"

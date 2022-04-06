@@ -30,8 +30,11 @@ let text =
    going to happen next. First, she tried to look down and make out what she \
    was coming to, but it was too dark to see anything; then she looked at the \
    sides of the well, and noticed that they were filled with cupboards......"
-
+(*
+let text = String.make 10_000_000 'a'
+*)
 let text = Bigstringaf.of_string ~off:0 ~len:(String.length text) text
+
 
 let headers =
   Headers.of_list
