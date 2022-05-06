@@ -1,7 +1,7 @@
 (executables
  (names iperf iperf_server http_utcp http_tcpip)
  (libraries
-  eio_luv
+  eio_linux
   logs.fmt
   mirage-net-unix
   ethernet
@@ -11,8 +11,7 @@
   mirage-random-stdlib
   mirage-clock-unix
   mirage-time-unix
+  mirage-unix
   utcp.eio
   tcpip.tcp
-  httpaf-eio)
- (instrumentation
-  (backend landmarks --auto )))
+  httpaf-eio))
