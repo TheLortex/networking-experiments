@@ -16,7 +16,7 @@ let unwrap_result = function
   | Ok v -> v
   | Error trace -> Fmt.pr "%a" Error.pp_trace trace
 
-let handler ~sw (flow : < Eio.Flow.two_way ; Eio.Flow.close >) =
+let handler ~sw (flow : < Eio.Flow.two_way ; Eio.Flow.close; .. >) =
   Eio.Private.Ctf.note_increase "http_handler" 1;
   Wrk_bench.handle_connection ~sw
     (flow :> Eio.Flow.two_way)

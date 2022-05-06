@@ -20,7 +20,7 @@ let handle_connection =
   Httpaf_eio.Server.create_connection_handler Wrk_bench.request_handler
     ~error_handler:Wrk_bench.error_handler
 
-let handler ~sw (flow : < Eio.Flow.two_way ; Eio.Flow.close >) =
+let handler ~sw (flow : < Eio.Flow.two_way ; Eio.Flow.close; .. >) =
   Eio.Private.Ctf.note_increase "http_handler" 1;
   handle_connection ~sw
     (flow :> Eio.Flow.two_way)

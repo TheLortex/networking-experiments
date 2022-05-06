@@ -25,3 +25,23 @@
 [submodule "vendor/ocaml-uring"]
 	path = vendor/ocaml-uring
 	url = https://github.com/TheLortex/ocaml-uring.git
+[submodule "mirage-vnetif"]
+	path = mirage-vnetif
+	url = https://github.com/TheLortex/mirage-vnetif
+[submodule "vendor/angstrom"]
+	path = vendor/angstrom
+	url = https://github.com/talex5/angstrom.git
+	branch = effects
+[submodule "vendor/httpaf"]
+	path = vendor/httpaf
+	url = https://github.com/talex5/httpaf.git
+	branch = eio
+[submodule "vendor/luv"]
+	path = vendor/luv
+	url = https://github.com/aantron/luv.git
+[submodule "vendor/ocaml-pcap"]
+	path = vendor/ocaml-pcap
+	url = https://github.com/mirage/ocaml-pcap
+[submodule "vendor/ocaml-tuntap"]
+	path = vendor/ocaml-tuntap
+	url = https://github.com/mirage/ocaml-tuntap

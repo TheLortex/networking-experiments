@@ -12,15 +12,13 @@ depends: [
   "ocaml" {>= "4.08.0"}
   "uring"
   "tcpip"
-  "eio"
-  "eio_linux"
   "mirage-net-unix"
   "mirage-random-stdlib"
   "mirage-clock-unix"
-]
-pin-depends: [
-  ["eio.dev" "git+https://github.com/ocaml-multicore/eio.git"]
-  ["eio_linux.dev" "git+https://github.com/ocaml-multicore/eio.git"]
-  ["uring.dev" "git+https://github.com/ocaml-multicore/ocaml-uring.git"]
+  "mirage-time-unix"
+  "alcotest"
+  "ipaddr-cstruct"
+  "mirage-random-test"
+  "mtime"
 ]
 synopsis: "Networking experiments"
