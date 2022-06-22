@@ -4,10 +4,6 @@ module Ip = Static_ipv4.Make (Mirage_random_stdlib) (Mclock) (Eth) (Arp)
 module Icmp = Icmpv4.Make (Ip)
 module Udp = Udp.Make (Ip) (Mirage_random_stdlib)
 
-let unwrap_result = function
-  | Ok v -> v
-  | Error trace -> Fmt.pr "%a" Error.pp_trace trace
-
 let ip_ignore ~src ~dst buffer = ignore (src, dst, buffer)
 let n_domains = 1
 let n_sent = 16
@@ -15,7 +11,7 @@ let n_threads = 8
 let cut = 4096
 let size = 1350
 let len = n_domains * n_sent * n_threads * cut * size
-let () = Printf.printf "Packet size: %d (%d)\n" len (n_domains * n_sent * n_threads * cut)
+let () = Printf.printf "Total sent: %d (%d)\n" len (n_domains * n_sent * n_threads * cut)
 
 (* 1MB buffer *)
 let data_buf = Cstruct.create_unsafe size
@@ -30,7 +26,7 @@ let echo_reply icmp ~proto ~src ~dst buffer =
 let test ~sw ~env () =
   let net = Netif.connect ~sw "tap0" in
   let t = Eth.connect net in
-  let arp = Arp.connect ~sw t (Eio.Stdenv.clock env) in
+  let arp = Arp.connect ~sw ~clock:(Eio.Stdenv.clock env) t in
   let ip =
     Ip.connect ~cidr:(Ipaddr.V4.Prefix.of_string_exn "10.0.0.10/24") t arp
   in
@@ -42,8 +38,7 @@ let test ~sw ~env () =
            ~ipv4:
              (Ip.input ~tcp:ip_ignore ~udp:(Udp.input udp)
                 ~default:(echo_reply icmp) ip)
-           ~ipv6:ignore t)
-      |> unwrap_result);
+           ~ipv6:ignore t));
   List.init n_domains (fun _ ->
       Eio.Domain_manager.run (Eio.Stdenv.domain_mgr env) @@ fun () ->
       List.init n_threads (fun _ () ->
@@ -52,8 +47,7 @@ let test ~sw ~env () =
               Udp.write
                 ~dst:(Ipaddr.V4.of_string_exn "10.0.0.11")
                 ~dst_port:2115 udp
-                (Cstruct.sub data_buf 0 size)
-              |> unwrap_result;
+                (Cstruct.sub data_buf 0 size);
             done;
             Printf.printf ".%!"
           done)

@@ -14,7 +14,7 @@ let echo_reply icmp ~proto ~src ~dst buffer =
 
 let unwrap_result = function
   | Ok v -> v
-  | Error trace -> Fmt.pr "%a" Error.pp_trace trace
+  | Error trace -> Fmt.pr "%s" (Printexc.to_string trace)
 
 let handler ~sw (flow : < Eio.Flow.two_way ; Eio.Flow.close; .. >) =
   Eio.Private.Ctf.note_increase "http_handler" 1;
@@ -28,7 +28,7 @@ let test ~sw ~env () =
   let clock = Eio.Stdenv.clock env in
   let net = Netif.connect ~sw "tap1" in
   let t = Eth.connect net in
-  let arp = Arp.connect ~sw t clock in
+  let arp = Arp.connect ~sw ~clock t in
   let ip =
     Ip.connect ~cidr:(Ipaddr.V4.Prefix.of_string_exn "10.0.0.11/24") t arp
   in
@@ -43,7 +43,6 @@ let test ~sw ~env () =
          (Ip.input ~tcp:(Tcp.input tcp) ~udp:ip_ignore
             ~default:(echo_reply icmp) ip)
        ~ipv6:ignore t)
-  |> unwrap_result
 
 
 let () =

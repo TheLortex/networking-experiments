@@ -14,7 +14,7 @@ let echo_reply icmp ~proto ~src ~dst buffer =
 
 let unwrap_result = function
   | Ok v -> v
-  | Error trace -> Fmt.pr "%a" Error.pp_trace trace
+  | Error trace -> Fmt.pr "%s" (Printexc.to_string trace)
 
 let handle_connection =
   Httpaf_eio.Server.create_connection_handler Wrk_bench.request_handler
@@ -32,7 +32,7 @@ let test ~sw ~env () =
   let clock = Eio.Stdenv.clock env in
   let net = Netif.connect ~sw "tap1" in
   let t = Eth.connect net in
-  let arp = Arp.connect ~sw t clock in
+  let arp = Arp.connect ~sw ~clock t in
   let ip =
     Ip.connect ~cidr:(Ipaddr.V4.Prefix.of_string_exn "10.0.0.11/24") t arp
   in
@@ -47,7 +47,6 @@ let test ~sw ~env () =
          (Ip.input ~tcp:(Tcp.input tcp) ~udp:ip_ignore
             ~default:(echo_reply icmp) ip)
        ~ipv6:ignore t)
-  |> unwrap_result
 
 let _ =
   Sys.set_signal Sys.sigint
@@ -57,7 +56,7 @@ let _ =
          exit 0))
 
 let () =
-  Logs.set_level (Some Info);
+  Logs.set_level (Some Warning);
   Logs.set_reporter (Logs_fmt.reporter ())
 
 let () =

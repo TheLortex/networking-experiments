@@ -4,10 +4,6 @@ module Ip = Static_ipv4.Make (Mirage_random_stdlib) (Mclock) (Eth) (Arp)
 module Icmp = Icmpv4.Make (Ip)
 module Udp = Udp.Make (Ip) (Mirage_random_stdlib)
 
-let unwrap_result = function
-  | Ok v -> v
-  | Error trace -> Fmt.pr "%a" Error.pp_trace trace
- 
 let ip_ignore ~src ~dst buffer = ignore (src, dst, buffer)
 
 let echo_reply icmp ~proto ~src ~dst buffer =
@@ -27,7 +23,7 @@ let _ =
 let test ~sw ~env () =
   let net = Netif.connect ~sw "tap1" in
   let t = Eth.connect net in
-  let arp = Arp.connect ~sw t (Eio.Stdenv.clock env) in
+  let arp = Arp.connect ~sw ~clock:(Eio.Stdenv.clock env) t  in
   let ip =
     Ip.connect ~cidr:(Ipaddr.V4.Prefix.of_string_exn "10.0.0.11/24") t arp
   in
@@ -44,7 +40,6 @@ let test ~sw ~env () =
          (Ip.input ~tcp:ip_ignore ~udp:(Udp.input udp)
             ~default:(echo_reply icmp) ip)
        ~ipv6:ignore t)
-  |> unwrap_result
 
 let () =
   Printf.printf "Ready.\n%!";

@@ -13,9 +13,6 @@
 [submodule "mirage-tcpip"]
 	path = mirage-tcpip
 	url = https://github.com/TheLortex/mirage-tcpip
-[submodule "error"]
-	path = error
-	url = https://github.com/TheLortex/error
 [submodule "utcp"]
 	path = utcp
 	url = https://github.com/TheLortex/utcp
@@ -30,11 +27,11 @@
 	url = https://github.com/TheLortex/mirage-vnetif
 [submodule "vendor/angstrom"]
 	path = vendor/angstrom
-	url = https://github.com/talex5/angstrom.git
+	url = https://github.com/TheLortex/angstrom.git
 	branch = effects
 [submodule "vendor/httpaf"]
 	path = vendor/httpaf
-	url = https://github.com/talex5/httpaf.git
+	url = https://github.com/TheLortex/httpaf.git
 	branch = eio
 [submodule "vendor/luv"]
 	path = vendor/luv

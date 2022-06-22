@@ -1,5 +1,5 @@
 (executables
- (names iperf iperf_server http_utcp http_tcpip)
+ (names iperf iperf_server http_utcp http_tcpip extend_stdenv extend_stdenv_server)
  (libraries
   eio_linux
   logs.fmt
@@ -8,10 +8,16 @@
   arp.mirage
   tcpip.ipv4
   tcpip.icmpv4
+  tcpip.ipv6
+  tcpip.stack-eio
   mirage-random-stdlib
   mirage-clock-unix
   mirage-time-unix
   mirage-unix
   utcp.eio
   tcpip.tcp
-  httpaf-eio))
+  httpaf-eio
+  mirage-vnetif
+  mirage-random-test
+  tcpip.stack-direct
+ ))
