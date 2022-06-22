@@ -23,6 +23,8 @@ opam pin -y git+https://github.com/patricoferris/ocaml-lsp#dc9a4ef8529628fe023e1
 ### Installing the project
 
 ```
+git clone --recursive https://github.com/TheLortex/networking-experiments
+cd networking-experiments
 opam install --deps-only ./ -t
 dune runtest
 ```
