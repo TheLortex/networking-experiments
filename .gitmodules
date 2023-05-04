@@ -25,10 +25,6 @@
 [submodule "mirage-vnetif"]
 	path = mirage-vnetif
 	url = https://github.com/TheLortex/mirage-vnetif
-[submodule "vendor/angstrom"]
-	path = vendor/angstrom
-	url = https://github.com/TheLortex/angstrom.git
-	branch = effects
 [submodule "vendor/httpaf"]
 	path = vendor/httpaf
 	url = https://github.com/TheLortex/httpaf.git
